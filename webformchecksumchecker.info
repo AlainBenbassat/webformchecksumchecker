@@ -1,0 +1,6 @@
+name = Webform Checksum Checker
+description = Checks if the cid and checksum are valid when passed to a webform
+core = 7.x
+package = Custom
+
+; development by Alain Benbassat - https://www.businessandcode.eu

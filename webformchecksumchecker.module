@@ -1,0 +1,49 @@
+<?php
+
+function webformchecksumchecker_form_alter( &$form, &$form_state,$form_id ){
+/*
+  echo '<pre>';
+  var_dump($form);
+  echo '</pre>';
+*/
+  // check if this is a webform
+  if (array_key_exists('#node', $form) && $form['#node']->type == 'webform') {
+    $cid = 0;
+    $cs = '';
+
+    // check if we have a queryparameter cid or cid1
+    if (array_key_exists('cid', $_GET)) {
+      $cid = $_GET['cid'];
+    }
+    elseif (array_key_exists('cid1', $_GET)) {
+      $cid = $_GET['cid1'];
+    }
+
+    // check if we have a queryparameter cs or cs1
+    if (array_key_exists('cs', $_GET)) {
+      $cs = $_GET['cs'];
+    }
+    elseif (array_key_exists('cs1', $_GET)) {
+      $cs = $_GET['cs1'];
+    }
+
+    // do we have contact ID?
+    if ($cid) {
+      if (!$cs) {
+        // redirect to the homepage if we don't have a checksum
+        drupal_set_message(t('Invalid parameter.'), 'error');
+        drupal_goto('<front>');
+      }
+      else {
+        // redirect to the homepage if the checksum is invalid
+        $isValidUser = CRM_Contact_BAO_Contact_Utils::validChecksum($cid, $cs);
+        if (!$isValidUser) {
+          drupal_set_message(t('Invalid parameter.'), 'error');
+          drupal_goto('<front>');
+        }
+      }
+    }
+  }
+}
+
+
